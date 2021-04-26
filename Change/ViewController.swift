@@ -25,8 +25,8 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    time()
-    dateFormatter.dateFormat = "yyyyMMdd"
+        time()
+        dateFormatter.dateFormat = "yyyyMMdd"
     }
     
     //使用switch做選擇照片的連續數值判斷
@@ -64,46 +64,49 @@ class ViewController: UIViewController {
     }
     
         //每秒執行一次compare(使圖片跑起來)
-        func time(){
-            timer = Timer.scheduledTimer(
-                withTimeInterval: 1,
-                repeats: true,
-                block: { (timer) in self.compare()}
-            )
-        }
+    func time() {
+        timer = Timer.scheduledTimer(
+            withTimeInterval: 1,
+            repeats: true,
+            block: { (timer) in self.compare()}
+        )
+    }
     
-        //if eles, 比對Array內的照片
-        func compare() {
-            if imageNumber >= image.count{
-            imageNumber = 0
-            choosePicture(number: imageNumber)
-            photoView.image = UIImage(named: image[imageNumber] )
-            }else{
-            choosePicture(number: imageNumber)
-            photoView.image = UIImage(named: image[imageNumber] )
-            }
-            //slider跟著滑動
-            timeSlider.value = Float(imageNumber)
-            imageNumber += 1
+    //if eles, 比對Array內的照片
+    func compare() {
+        if imageNumber >= image.count{
+        imageNumber = 0
+        choosePicture(number: imageNumber)
+        photoView.image = UIImage(named: image[imageNumber] )
+        }else{
+        choosePicture(number: imageNumber)
+        photoView.image = UIImage(named: image[imageNumber] )
         }
-            
+        //slider跟著滑動
+        timeSlider.value = Float(imageNumber)
+        imageNumber += 1
+    }
+        
     @IBAction func changeImageDatePicker(_ sender: UIDatePicker) {
-        //取得datePicker的日期
+        //利用datePicker使用年、月選擇照片
         let dateComponents = Calendar.current.dateComponents(in: TimeZone.current, from: datePicker.date)
         let year = dateComponents.year!
         let picName = "\(year)"
+        
         photoView.image = UIImage(named: picName)
-        timeSlider.value = Float(year - 2012)
+        timeSlider.value = Float(year - 2012) // timeSlider 是 0, 1, 2, 3
     }
     
+    // 拉 slider 觸發
     @IBAction func changeTimeSlider(_ sender: UISlider) {
-        //取得日期
         sender.value.round()
         sliderNumber = Int(sender.value)
         let imageSlider = image[sliderNumber]
         photoView.image = UIImage(named: String(imageSlider))
+        choosePicture(number: sliderNumber)
     }
         
+    // auto
     @IBAction func turnSwitch(_ sender: UISwitch) {
         if sender.isOn{
             time()
